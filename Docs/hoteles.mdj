@@ -3727,9 +3727,9 @@
 										"$ref": "AAAAAAGhL6YDo1Vdwtw="
 									},
 									"font": "Arial;13;0",
-									"left": 609,
+									"left": 608,
 									"top": 232,
-									"width": 5.05908203125,
+									"width": 6.5,
 									"height": 13,
 									"alpha": 0.6578888251046529,
 									"distance": 27.80287754891569,
@@ -7739,7 +7739,7 @@
 											"top": 105,
 											"width": 386.9150390625,
 											"height": 13,
-											"text": "+reserva(idHotel: int, reserva: Reserva): Reserva",
+											"text": "+reservar(idHotel: int, reserva: Reserva): Reserva",
 											"horizontalAlignment": 0
 										},
 										{
@@ -8163,7 +8163,7 @@
 											"top": 824,
 											"width": 387.9150390625,
 											"height": 13,
-											"text": "+reserva(idHotel: int, reserva: Reserva): Reserva",
+											"text": "+reservar(idHotel: int, reserva: Reserva): Reserva",
 											"horizontalAlignment": 0
 										},
 										{
@@ -10091,7 +10091,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGhL9iTEhdnzCE="
 							},
-							"name": "reserva",
+							"name": "reservar",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
