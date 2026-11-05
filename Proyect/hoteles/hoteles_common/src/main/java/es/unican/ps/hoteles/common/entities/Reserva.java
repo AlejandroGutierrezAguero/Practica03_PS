@@ -1,6 +1,7 @@
 package es.unican.ps.hoteles.common.entities;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Reserva {
@@ -8,7 +9,6 @@ public class Reserva {
     private int idReserva;
     private LocalDate fechaEntrada;
     private LocalDate fechaSalida;
-    private double importe;
     private Cliente cliente;
     private Pago pago;
     private List<ReservaTipoHabitacion> reservasTipo;
@@ -22,8 +22,11 @@ public class Reserva {
     }
 
     private double calculaImporte() {
-        // TODO
-        return 0.0;
+        double importe = 0;
+        for (ReservaTipoHabitacion rt : reservasTipo) {
+            importe += rt.getNumHabitaciones() * rt.getPrecioHabitacion() * ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
+        }
+        return importe;
     }
     
     public int getIdReserva() {
@@ -51,11 +54,7 @@ public class Reserva {
     }
 
     public double getImporte() {
-        return importe;
-    }
-
-    public void setImporte(double importe) {
-        this.importe = importe;
+        return calculaImporte();
     }
 
     public Cliente getCliente() {
