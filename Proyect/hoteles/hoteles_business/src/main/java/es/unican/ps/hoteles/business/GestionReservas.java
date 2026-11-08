@@ -58,13 +58,13 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
 
     @Override
     public List<SolicitudHabitacion> consultarHabitacionesHotel(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws DataAccessException, FechasInvalidasException {
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
+        }
+
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
-        }
-
-        if (!fechasValidas(fechaEntrada, fechaSalida)) {
-            throw new FechasInvalidasException();
         }
 
         Map<Habitacion, Integer> disponibilidad = consultaDisponibilidad(hotel, fechaEntrada, fechaSalida);
@@ -85,13 +85,13 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
 
     @Override
     public double solictarHabitaciones(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes) throws DataAccessException, FechasInvalidasException {
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
+        }
+        
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return -1;
-        }
-
-        if (!fechasValidas(fechaEntrada, fechaSalida)) {
-            throw new FechasInvalidasException();
         }
 
         long numeroNoches = ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
@@ -111,13 +111,13 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
 
     @Override
     public Reserva reservar(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes, Cliente cliente, Pago pago) throws DataAccessException, FechasInvalidasException {
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
+        }
+        
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
-        }
-
-        if (!fechasValidas(fechaEntrada, fechaSalida)) {
-            throw new FechasInvalidasException();
         }
 
         double precio = solictarHabitaciones(idHotel, fechaEntrada, fechaSalida, solicitudes);

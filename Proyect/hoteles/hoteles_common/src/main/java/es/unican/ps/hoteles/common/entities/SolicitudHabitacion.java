@@ -30,4 +30,29 @@ public class SolicitudHabitacion {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((habitacion == null) ? 0 : habitacion.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SolicitudHabitacion other = (SolicitudHabitacion) obj;
+        if (habitacion == null) {
+            if (other.habitacion != null)
+                return false;
+        } else if (!habitacion.equals(other.habitacion))
+            return false;
+        return true;
+    }
 }

@@ -12,7 +12,7 @@ public class Cliente {
     private String email;
 
     public Cliente(String dni, String nombre, String primerApellido, String segundoApellido, String email) throws ParametrosInvalidosException {
-        if (dni == null || nombre == null || primerApellido == null || segundoApellido == null || email == null) {
+        if (dni == null || nombre == null || primerApellido == null || email == null) {
             throw new ParametrosInvalidosException();
         }
         this.dni = dni;
