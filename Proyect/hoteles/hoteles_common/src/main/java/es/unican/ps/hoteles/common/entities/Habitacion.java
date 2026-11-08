@@ -1,5 +1,7 @@
 package es.unican.ps.hoteles.common.entities;
 
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+
 public class Habitacion {
 
     private int idHabitacion;
@@ -7,8 +9,10 @@ public class Habitacion {
     private int disponibles;
     private TipoHabitacion tipo;
 
-    public Habitacion(int idHabitacion, double precioPorNoche, int disponibles, TipoHabitacion tipo) {
-        this.idHabitacion = idHabitacion;
+    public Habitacion(double precioPorNoche, int disponibles, TipoHabitacion tipo) throws ParametrosInvalidosException {
+        if (precioPorNoche < 0 || disponibles < 0 || tipo == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.precioPorNoche = precioPorNoche;
         this.disponibles = disponibles;
         this.tipo = tipo;

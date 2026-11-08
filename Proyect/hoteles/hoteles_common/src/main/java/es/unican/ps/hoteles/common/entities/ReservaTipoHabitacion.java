@@ -1,5 +1,7 @@
 package es.unican.ps.hoteles.common.entities;
 
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+
 public class ReservaTipoHabitacion {
 
     private int idReservaTipo;
@@ -7,8 +9,10 @@ public class ReservaTipoHabitacion {
     private double precioHabitacion;
     private Habitacion tipoHabitacion;
 
-    public ReservaTipoHabitacion(int idReservaTipo, int numHabitaciones, double precioHabitacion, Habitacion tipoHabitacion) {
-        this.idReservaTipo = idReservaTipo;
+    public ReservaTipoHabitacion(int numHabitaciones, double precioHabitacion, Habitacion tipoHabitacion) throws ParametrosInvalidosException {
+        if (numHabitaciones <= 0 || precioHabitacion < 0 || tipoHabitacion == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.numHabitaciones = numHabitaciones;
         this.precioHabitacion = precioHabitacion;
         this.tipoHabitacion = tipoHabitacion;
@@ -50,7 +54,7 @@ public class ReservaTipoHabitacion {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idReservaTipo;
+        result = prime * result + ((tipoHabitacion == null) ? 0 : tipoHabitacion.hashCode());
         return result;
     }
 
@@ -63,8 +67,12 @@ public class ReservaTipoHabitacion {
         if (getClass() != obj.getClass())
             return false;
         ReservaTipoHabitacion other = (ReservaTipoHabitacion) obj;
-        if (idReservaTipo != other.idReservaTipo)
+        if (tipoHabitacion == null) {
+            if (other.tipoHabitacion != null)
+                return false;
+        } else if (!tipoHabitacion.equals(other.tipoHabitacion))
             return false;
         return true;
     }
+
 }

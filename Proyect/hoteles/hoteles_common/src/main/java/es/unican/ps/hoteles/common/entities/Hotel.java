@@ -1,6 +1,9 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
 
 public class Hotel {
 
@@ -12,12 +15,16 @@ public class Hotel {
     private List<Habitacion> habitaciones;
     private List<Reserva> reservas;
 
-    public Hotel(int idHotel, String nombre, String direccion, String localidad, Categoria categoria) {
-        this.idHotel = idHotel;
+    public Hotel(String nombre, String direccion, String localidad, Categoria categoria) throws ParametrosInvalidosException {
+        if (nombre == null || direccion == null || localidad == null || categoria == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.nombre = nombre;
         this.direccion = direccion;
         this.localidad = localidad;
         this.categoria = categoria;
+        this.habitaciones = new ArrayList<>();
+        this.reservas = new ArrayList<>();
     }
 
     public int getIdHotel() {

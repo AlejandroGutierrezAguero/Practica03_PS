@@ -1,9 +1,9 @@
 package es.unican.ps.hoteles.common.exceptions;
 
-public class DataAccessException extends RuntimeException {
+public class DataAccessException extends Exception {
 
-	public DataAccessException(String string) {
-		super(string);
+	public DataAccessException() {
+		super("Error en el acceso a datos");
 	}
 
 }

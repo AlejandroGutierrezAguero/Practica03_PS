@@ -1,5 +1,7 @@
 package es.unican.ps.hoteles.common.entities;
 
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+
 public class Cliente {
 
     private int idCliente;
@@ -9,8 +11,10 @@ public class Cliente {
     private String segundoApellido;
     private String email;
 
-    public Cliente(int idCliente, String dni, String nombre, String primerApellido, String segundoApellido, String email) {
-        this.idCliente = idCliente;
+    public Cliente(String dni, String nombre, String primerApellido, String segundoApellido, String email) throws ParametrosInvalidosException {
+        if (dni == null || nombre == null || primerApellido == null || segundoApellido == null || email == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.dni = dni;
         this.nombre = nombre;
         this.primerApellido = primerApellido;

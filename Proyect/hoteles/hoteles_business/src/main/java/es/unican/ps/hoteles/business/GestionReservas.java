@@ -18,6 +18,11 @@ import es.unican.ps.hoteles.common.entities.Pago;
 import es.unican.ps.hoteles.common.entities.Reserva;
 import es.unican.ps.hoteles.common.entities.ReservaTipoHabitacion;
 import es.unican.ps.hoteles.common.entities.SolicitudHabitacion;
+import es.unican.ps.hoteles.common.exceptions.DataAccessException;
+import es.unican.ps.hoteles.common.exceptions.FechasInvalidasException;
+import es.unican.ps.hoteles.common.exceptions.LimiteCancelacionExcedidoException;
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import es.unican.ps.hoteles.common.exceptions.ReservaNoCorrespondeConDNIException;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
@@ -31,28 +36,35 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
     private IDAOHotelRemota hotelDAO;
 
     @Override
-    public Reserva consultarReserva(int idReserva, String dni) {
+    public Reserva consultarReserva(int idReserva, String dni) throws DataAccessException, ReservaNoCorrespondeConDNIException {
         Reserva reserva = reservaDAO.reserva(idReserva);
-        if (reserva == null || !reserva.getCliente().getDni().equals(dni)) {
-            return null;
+        if (reserva != null && !reserva.getCliente().getDni().equals(dni)) {
+            throw new ReservaNoCorrespondeConDNIException();
         }
         return reserva;
     }
 
     @Override
-    public Reserva cancelarReserva(int idReserva) {
+    public Reserva cancelarReserva(int idReserva) throws DataAccessException, LimiteCancelacionExcedidoException {
         Reserva reserva = reservaDAO.reserva(idReserva);
-        if (reserva == null || reserva.getFechaEntrada().isBefore(LocalDate.now().plusDays(2))) {
+        if (reserva == null) {
             return null;
+        }
+        if (reserva.getFechaEntrada().isBefore(LocalDate.now().plusDays(2))) {
+            throw new LimiteCancelacionExcedidoException();
         }
         return reservaDAO.eliminaReserva(idReserva);
     }
 
     @Override
-    public List<SolicitudHabitacion> consultarHabitacionesHotel(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) {
+    public List<SolicitudHabitacion> consultarHabitacionesHotel(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws DataAccessException, FechasInvalidasException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
+        }
+
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
         }
 
         Map<Habitacion, Integer> disponibilidad = consultaDisponibilidad(hotel, fechaEntrada, fechaSalida);
@@ -60,7 +72,11 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
         List<SolicitudHabitacion> habitacionesDisponibles = new ArrayList<>();
         for (Map.Entry<Habitacion, Integer> entry : disponibilidad.entrySet()) {
             if (entry.getValue() > 0) {
-                habitacionesDisponibles.add(new SolicitudHabitacion(entry.getKey(), entry.getValue()));
+                try {
+                    habitacionesDisponibles.add(new SolicitudHabitacion(entry.getKey(), entry.getValue()));
+                } catch (ParametrosInvalidosException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -68,10 +84,14 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
     }
 
     @Override
-    public double solictarHabitaciones(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes) {
+    public double solictarHabitaciones(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes) throws DataAccessException, FechasInvalidasException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return -1;
+        }
+
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
         }
 
         long numeroNoches = ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
@@ -90,10 +110,14 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
     }
 
     @Override
-    public Reserva reservar(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes, Cliente cliente, Pago pago) {
+    public Reserva reservar(int idHotel, LocalDate fechaEntrada, LocalDate fechaSalida, List<SolicitudHabitacion> solicitudes, Cliente cliente, Pago pago) throws DataAccessException, FechasInvalidasException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
+        }
+
+        if (!fechasValidas(fechaEntrada, fechaSalida)) {
+            throw new FechasInvalidasException();
         }
 
         double precio = solictarHabitaciones(idHotel, fechaEntrada, fechaSalida, solicitudes);
@@ -101,9 +125,14 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
             return null;
         }
 
-        Reserva reserva = new Reserva(0, fechaEntrada, fechaSalida, cliente, pago);
-        for (SolicitudHabitacion s : solicitudes) {
-            reserva.getReservasTipo().add(new ReservaTipoHabitacion(0, s.getCantidad(), s.getHabitacion().getPrecioPorNoche(), s.getHabitacion()));
+        Reserva reserva = null;
+        try {
+            reserva = new Reserva(fechaEntrada, fechaSalida, cliente, pago);
+            for (SolicitudHabitacion s : solicitudes) {
+                reserva.getReservasTipo().add(new ReservaTipoHabitacion(s.getCantidad(), s.getHabitacion().getPrecioPorNoche(), s.getHabitacion()));
+            }
+        } catch (ParametrosInvalidosException e) {
+            e.printStackTrace();
         }
         
         hotel.getReservas().add(reserva);
@@ -119,7 +148,7 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
      * @param fechaSalida Fecha de salida.
      * @return Las habitaciones disponibles en el periodo y hotel con la cantidad.
      */
-    private static Map<Habitacion, Integer> consultaDisponibilidad (Hotel hotel, LocalDate fechaEntrada, LocalDate fechaSalida) {
+    private static Map<Habitacion, Integer> consultaDisponibilidad(Hotel hotel, LocalDate fechaEntrada, LocalDate fechaSalida) {
         Map<Habitacion, Integer> disponibilidad = new HashMap<>();
 
         for (Habitacion h : hotel.getHabitaciones()) {
@@ -135,6 +164,18 @@ public class GestionReservas implements IReservasPersonalLocal, IReservasPersona
         }
 
         return disponibilidad;
+    }
+
+    /**
+     * Comprueba si una pareja de fechas de entrada y salida es válida.
+     * Las fechas serán válidas si la fecha de entrada es anterior a la de salida, y posterior o igual a la actual.
+     * 
+     * @param fechaEntrada Fecha de entrada.
+     * @param fechaSalida Fecha de salida.
+     * @return ture si las fechas son válidas, false en caso contrario.
+     */
+    private static boolean fechasValidas(LocalDate fechaEntrada, LocalDate fechaSalida) {
+        return !fechaEntrada.isBefore(LocalDate.now()) && fechaEntrada.isBefore(fechaSalida);
     }
     
 }

@@ -1,5 +1,9 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.time.LocalDate;
+
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+
 public class Pago {
 
     private int idPago;
@@ -9,8 +13,10 @@ public class Pago {
     private int anhoCaducidad;
     private TipoTarjeta tipoTarjeta;
 
-    public Pago(int idPago, String numTarjeta, String cvc, int mesCaducidad, int anhoCaducidad, TipoTarjeta tipoTarjeta) {
-        this.idPago = idPago;
+    public Pago(String numTarjeta, String cvc, int mesCaducidad, int anhoCaducidad, TipoTarjeta tipoTarjeta) throws ParametrosInvalidosException {
+        if (numTarjeta == null || cvc == null || mesCaducidad <= 0 || mesCaducidad > 12 || anhoCaducidad < LocalDate.now().getYear() || tipoTarjeta == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.numTarjeta = numTarjeta;
         this.cvc = cvc;
         this.mesCaducidad = mesCaducidad;

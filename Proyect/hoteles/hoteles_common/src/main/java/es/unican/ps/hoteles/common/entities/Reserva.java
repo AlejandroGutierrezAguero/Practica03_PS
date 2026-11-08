@@ -2,7 +2,10 @@ package es.unican.ps.hoteles.common.entities;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+
+import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
 
 public class Reserva {
 
@@ -13,12 +16,15 @@ public class Reserva {
     private Pago pago;
     private List<ReservaTipoHabitacion> reservasTipo;
 
-    public Reserva(int idReserva, LocalDate fechaEntrada, LocalDate fechaSalida, Cliente cliente, Pago pago) {
-        this.idReserva = idReserva;
+    public Reserva(LocalDate fechaEntrada, LocalDate fechaSalida, Cliente cliente, Pago pago) throws ParametrosInvalidosException {
+        if (fechaEntrada == null || fechaEntrada == null || cliente == null || pago == null) {
+            throw new ParametrosInvalidosException();
+        }
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.cliente = cliente;
         this.pago = pago;
+        this.reservasTipo = new ArrayList<>();
     }
 
     private double calculaImporte() {

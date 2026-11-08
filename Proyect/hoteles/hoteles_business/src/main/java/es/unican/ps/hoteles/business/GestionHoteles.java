@@ -1,6 +1,7 @@
 package es.unican.ps.hoteles.business;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import es.unican.ps.hoteles.common.businessLayer.IBusquedaHotelesLocal;
@@ -11,6 +12,7 @@ import es.unican.ps.hoteles.common.daoLayer.IDAOHotelRemota;
 import es.unican.ps.hoteles.common.entities.Habitacion;
 import es.unican.ps.hoteles.common.entities.Hotel;
 import es.unican.ps.hoteles.common.entities.Reserva;
+import es.unican.ps.hoteles.common.exceptions.DataAccessException;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
@@ -21,18 +23,12 @@ public class GestionHoteles implements IBusquedaHotelesLocal, IBusquedaHotelesRe
     private IDAOHotelRemota hotelDAO;
 
     @Override
-    public Hotel buscarHotelPorNombre(String nombre) {
-        List<Hotel> hoteles = hotelDAO.hoteles();
-        for (Hotel h : hoteles) {
-            if (h.getNombre().equals(nombre)) {
-                return h;
-            }
-        }
-        return null;
+    public Hotel buscarHotelPorNombre(String nombre) throws DataAccessException {
+        return hotelDAO.hotelPorNombre(nombre);
     }
 
     @Override
-    public List<Hotel> buscarHotelPorLocalidad(String localidad) {
+    public List<Hotel> buscarHotelPorLocalidad(String localidad) throws DataAccessException {
         List<Hotel> hoteles = hotelDAO.hoteles();
         List<Hotel> result = new ArrayList<>();
         for (Hotel h : hoteles) {
@@ -44,16 +40,18 @@ public class GestionHoteles implements IBusquedaHotelesLocal, IBusquedaHotelesRe
     }
 
     @Override
-    public List<Reserva> consultarReservasHotel(int idHotel) {
+    public List<Reserva> consultarReservasHotel(int idHotel) throws DataAccessException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
         }
-        return hotel.getReservas();
+        List<Reserva> reservas = hotel.getReservas();
+        reservas.sort(Comparator.comparing(Reserva::getFechaEntrada));
+        return reservas;
     }
 
     @Override
-    public List<Habitacion> modificarHabitaciones(int idHotel, List<Habitacion> habitaciones) {
+    public List<Habitacion> modificarHabitaciones(int idHotel, List<Habitacion> habitaciones) throws DataAccessException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
@@ -72,9 +70,9 @@ public class GestionHoteles implements IBusquedaHotelesLocal, IBusquedaHotelesRe
     }
 
     @Override
-    public Habitacion anhadirTipoDeHabitacionEnHotel(int idHotel, Habitacion habitacion) {
+    public Habitacion anhadirTipoDeHabitacionEnHotel(int idHotel, Habitacion habitacion) throws DataAccessException {
         Hotel hotel = hotelDAO.hotel(idHotel);
-        if (hotel == null || habitacion == null || hotel.getHabitaciones().contains(habitacion)) {
+        if (hotel == null || hotel.getHabitaciones().contains(habitacion)) {
             return null;
         }
         hotel.getHabitaciones().add(habitacion);
@@ -83,7 +81,7 @@ public class GestionHoteles implements IBusquedaHotelesLocal, IBusquedaHotelesRe
     }
 
     @Override
-    public Habitacion eliminarTipoDeHabitacionEnHotel(int idHotel, int idHabitacion) {
+    public Habitacion eliminarTipoDeHabitacionEnHotel(int idHotel, int idHabitacion) throws DataAccessException {
         Hotel hotel = hotelDAO.hotel(idHotel);
         if (hotel == null) {
             return null;
