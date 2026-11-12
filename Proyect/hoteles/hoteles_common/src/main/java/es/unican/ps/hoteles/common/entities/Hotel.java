@@ -1,19 +1,51 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-public class Hotel {
+@Entity
+@Table(name = "Hoteles")
+public class Hotel implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(nullable = false)
     private int idHotel;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(name = "direc", nullable = false)
     private String direccion;
+
+    @Column(name = "localid", nullable = false)
     private String localidad;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categ", nullable = false)
     private Categoria categoria;
+
+    @OneToMany
+    @JoinColumn(name = "Hotel_FK", nullable = false)
     private List<Habitacion> habitaciones;
+
+    @OneToMany
+    @JoinColumn(name = "Hotel_FK", nullable = false)
     private List<Reserva> reservas;
+
+    public Hotel () {}
 
     public Hotel(String nombre, String direccion, String localidad, Categoria categoria) throws ParametrosInvalidosException {
         if (nombre == null || direccion == null || localidad == null || categoria == null) {

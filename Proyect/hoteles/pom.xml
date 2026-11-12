@@ -13,6 +13,7 @@
     <modules>
         <module>hoteles_common</module>
         <module>hoteles_business</module>
+        <module>hoteles_dao</module>
     </modules>
 
     <properties>

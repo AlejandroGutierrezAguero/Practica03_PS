@@ -1,17 +1,43 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-public class Pago {
+@Entity
+@Table(name = "Pagos")
+public class Pago implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(nullable = false)
     private int idPago;
+
+    @Column(name = "numTar", nullable = false)
     private String numTarjeta;
+
+    @Column(nullable = false)
     private String cvc;
+
+    @Column(name = "mesCad", nullable = false)
     private int mesCaducidad;
+
+    @Column(name = "anhoCad", nullable = false)
     private int anhoCaducidad;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipoTar", nullable = false)
     private TipoTarjeta tipoTarjeta;
+
+    public Pago () {}
 
     public Pago(String numTarjeta, String cvc, int mesCaducidad, int anhoCaducidad, TipoTarjeta tipoTarjeta) throws ParametrosInvalidosException {
         if (numTarjeta == null || cvc == null || mesCaducidad <= 0 || mesCaducidad > 12 || anhoCaducidad < LocalDate.now().getYear() || tipoTarjeta == null) {

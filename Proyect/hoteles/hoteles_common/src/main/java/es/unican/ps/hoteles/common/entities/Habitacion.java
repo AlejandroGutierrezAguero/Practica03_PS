@@ -1,13 +1,36 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
+
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-public class Habitacion {
+@Entity
+@Table(name = "Habitaciones")
+public class Habitacion implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "idHab", nullable = false)
     private int idHabitacion;
+
+    @Column(name = "prcNoche", nullable = false)
     private double precioPorNoche;
+
+    @Column(name = "disps", nullable = false)
     private int disponibles;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoHabitacion tipo;
+
+    public Habitacion () {}
 
     public Habitacion(double precioPorNoche, int disponibles, TipoHabitacion tipo) throws ParametrosInvalidosException {
         if (precioPorNoche < 0 || disponibles < 0 || tipo == null) {

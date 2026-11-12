@@ -1,15 +1,39 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
+
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-public class Cliente {
+@Entity
+@Table(name = "Clientes")
+public class Cliente implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "idCli", nullable = false)
     private int idCliente;
+
+    @Column(nullable = false)
     private String dni;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(name = "primAp", nullable = false)
     private String primerApellido;
+
+    @Column(name = "segAp")
     private String segundoApellido;
+
+    @Column(nullable = false)
     private String email;
+
+    public Cliente () {}
 
     public Cliente(String dni, String nombre, String primerApellido, String segundoApellido, String email) throws ParametrosInvalidosException {
         if (dni == null || nombre == null || primerApellido == null || email == null) {

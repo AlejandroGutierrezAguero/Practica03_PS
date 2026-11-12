@@ -1,20 +1,49 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
-public class Reserva {
+@Entity
+@Table(name = "Reservas")
+public class Reserva implements Serializable {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "idRes", nullable = false)
     private int idReserva;
+
+    @Column(name = "fechEnt", nullable = false)
     private LocalDate fechaEntrada;
+
+    @Column(name = "fechSal", nullable = false)
     private LocalDate fechaSalida;
+
+    @OneToOne
+    @JoinColumn(name = "Cliente_FK", nullable = false)
     private Cliente cliente;
+
+    @OneToOne
+    @JoinColumn(name = "Pago_FK", nullable = false)
     private Pago pago;
+
+    @OneToMany
+    @JoinColumn(name = "Reserva_FK", nullable = false)
     private List<ReservaTipoHabitacion> reservasTipo;
+
+    public Reserva () {}
 
     public Reserva(LocalDate fechaEntrada, LocalDate fechaSalida, Cliente cliente, Pago pago) throws ParametrosInvalidosException {
         if (fechaEntrada == null || fechaEntrada == null || cliente == null || pago == null) {
