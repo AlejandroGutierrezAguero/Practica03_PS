@@ -60,13 +60,13 @@ public class GestionReservasTest {
 
         Cliente cliente = new Cliente("11111111A", "Juan", "Pérez", "López", "pepelopez@gmail.com");
         Pago pago = new Pago("1111222233334444", "123", 10, 2030, TipoTarjeta.MASTERCARD);
-        Reserva reserva = new Reserva(LocalDate.of(2026, 11, 4), LocalDate.of(2026, 11, 10), cliente, pago);
+        Reserva reserva = new Reserva(LocalDate.now().minusDays(4), LocalDate.now().plusDays(4), cliente, pago);
         ReservaTipoHabitacion reservaTipo = new ReservaTipoHabitacion(8, 100, habitacionDoble);
         reserva.getReservasTipo().add(reservaTipo);
         hotel.getReservas().add(reserva);
 
         when(mockIDAOHotel.hotel(0001)).thenReturn(hotel);
-        List<SolicitudHabitacion> result = sut.consultarHabitacionesHotel(0001, LocalDate.of(2026, 11, 10), LocalDate.of(2026, 11, 12));
+        List<SolicitudHabitacion> result = sut.consultarHabitacionesHotel(0001, LocalDate.now().plusDays(4), LocalDate.now().plusDays(6));
         verify(mockIDAOHotel).hotel(0001);
         assertEquals(2, result.size());
         SolicitudHabitacion disponibleDoble = result.stream()
@@ -132,11 +132,11 @@ public class GestionReservasTest {
 
         Cliente cliente = new Cliente("11111111A", "Juan", "Pérez", "López", "pepelopez@gmail.com");
         Pago pago = new Pago("1111222233334444", "123", 10, 2030, TipoTarjeta.MASTERCARD);
-        Reserva reserva1 = new Reserva(LocalDate.of(2026, 11, 4), LocalDate.of(2026, 11, 10), cliente, pago);
+        Reserva reserva1 = new Reserva(LocalDate.now().minusDays(4), LocalDate.now().plusDays(4), cliente, pago);
         ReservaTipoHabitacion reservaTipoDoble = new ReservaTipoHabitacion(6, 100, habitacionDoble);
         reserva1.getReservasTipo().add(reservaTipoDoble);
 
-        Reserva reserva2 = new Reserva(LocalDate.of(2026, 11, 14), LocalDate.of(2026, 11, 20), cliente, pago);
+        Reserva reserva2 = new Reserva(LocalDate.now().plusDays(12), LocalDate.now().plusDays(20), cliente, pago);
         ReservaTipoHabitacion reservaTipoIndividual = new ReservaTipoHabitacion(2, 100, habitacionIndividual);
         reserva2.getReservasTipo().add(reservaTipoIndividual);
 
@@ -144,7 +144,7 @@ public class GestionReservasTest {
         hotel.getReservas().add(reserva2);
 
         when(mockIDAOHotel.hotel(0004)).thenReturn(hotel);
-        List<SolicitudHabitacion> result = sut.consultarHabitacionesHotel(0004, LocalDate.of(2026, 11, 9), LocalDate.of(2026, 11, 15));
+        List<SolicitudHabitacion> result = sut.consultarHabitacionesHotel(0004, LocalDate.now().plusDays(3), LocalDate.now().plusDays(13));
         verify(mockIDAOHotel).hotel(0004);
         assertEquals(0, result.size());
     }
