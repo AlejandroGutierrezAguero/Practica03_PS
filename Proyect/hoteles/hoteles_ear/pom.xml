@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+          <groupId>es.unican.ps</groupId>
+          <artifactId>hoteles</artifactId>
+          <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>hoteles_ear</artifactId>
+
+    <packaging>ear</packaging>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.unican.ps</groupId>
+            <artifactId>hoteles_common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.unican.ps</groupId>
+            <artifactId>hoteles_business</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>es.unican.ps</groupId>
+            <artifactId>hoteles_dao</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>ejb</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>hoteles_ear</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <ejbModule>
+                            <groupId>es.unican.ps</groupId>
+                            <artifactId>hoteles_business</artifactId>
+                            <bundleFileName>hoteles_business.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>es.unican.ps</groupId>
+                            <artifactId>hoteles_dao</artifactId>
+                            <bundleFileName>hoteles_dao.jar</bundleFileName>
+                        </ejbModule>
+
+                        <jarModule>
+                            <groupId>es.unican.ps</groupId>
+                            <artifactId>hoteles_common</artifactId>
+                            <bundleFileName>hoteles_common.jar</bundleFileName>
+                        </jarModule>
+                    </modules>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.glassfish.maven.plugin</groupId>
+                <artifactId>maven-glassfish-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <glassfishDirectory>${local.glassfish.home}</glassfishDirectory>
+                    <user>admin</user>
+                    <passwordFile>${local.glassfish.passfile}</passwordFile>
+                    <domain>
+                        <name>domain1</name>
+                        <httpPort>8080</httpPort>
+                        <adminPort>4848</adminPort>
+                    </domain>
+                    <components>
+                        <component>
+                            <name>${project.artifactId}</name>
+                            <artifact>target/${project.build.finalName}.ear</artifact>
+                        </component>
+                    </components>
+                    <echo>true</echo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

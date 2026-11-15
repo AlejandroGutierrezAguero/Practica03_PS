@@ -14,6 +14,7 @@
         <module>hoteles_common</module>
         <module>hoteles_business</module>
         <module>hoteles_dao</module>
+        <module>hoteles_ear</module>
     </modules>
 
     <properties>
