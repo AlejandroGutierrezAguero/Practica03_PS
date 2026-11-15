@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,11 +13,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Hoteles")
+@NamedQueries({
+    @NamedQuery(name = "hoteles", query = "SELECT h FROM Hotel h"),
+    @NamedQuery(name = "hotelPorNombre", query = "SELECT h FROM Hotel h WHERE h.nombre = :nomb")
+})
 public class Hotel implements Serializable {
 
     @Id
@@ -37,7 +44,7 @@ public class Hotel implements Serializable {
     @Column(name = "categ", nullable = false)
     private Categoria categoria;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "Hotel_FK", nullable = false)
     private List<Habitacion> habitaciones;
 
