@@ -20,7 +20,7 @@
     </properties>
 
     <build>
-        <finalName>hoteles_common</finalName>
+        <finalName>UCHotelesCommon</finalName>
     </build>
 
 </project>

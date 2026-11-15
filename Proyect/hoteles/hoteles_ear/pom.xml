@@ -42,7 +42,7 @@
     </dependencies>
 
     <build>
-        <finalName>hoteles_ear</finalName>
+        <finalName>UCHoteles</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -54,19 +54,19 @@
                         <ejbModule>
                             <groupId>es.unican.ps</groupId>
                             <artifactId>hoteles_business</artifactId>
-                            <bundleFileName>hoteles_business.jar</bundleFileName>
+                            <bundleFileName>UCHotelesBusiness.jar</bundleFileName>
                         </ejbModule>
 
                         <ejbModule>
                             <groupId>es.unican.ps</groupId>
                             <artifactId>hoteles_dao</artifactId>
-                            <bundleFileName>hoteles_dao.jar</bundleFileName>
+                            <bundleFileName>UCHotelesDAO.jar</bundleFileName>
                         </ejbModule>
 
                         <jarModule>
                             <groupId>es.unican.ps</groupId>
                             <artifactId>hoteles_common</artifactId>
-                            <bundleFileName>hoteles_common.jar</bundleFileName>
+                            <bundleFileName>UCHotelesCommon.jar</bundleFileName>
                         </jarModule>
                     </modules>
                 </configuration>

@@ -28,7 +28,7 @@
     </dependencies>
 
     <build>
-        <finalName>hoteles_dao</finalName>
+        <finalName>UCHotelesDAO</finalName>
     </build>
 
 </project>
