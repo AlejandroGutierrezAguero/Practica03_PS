@@ -15,7 +15,7 @@ import jakarta.persistence.TypedQuery;
 @Stateless
 public class DAOReserva implements IDAOReservaLocal, IDAOReservaRemota {
 
-    @PersistenceContext(unitName = "")
+    @PersistenceContext(unitName = "hotelesPU")
     private EntityManager em;
 
     @Override
