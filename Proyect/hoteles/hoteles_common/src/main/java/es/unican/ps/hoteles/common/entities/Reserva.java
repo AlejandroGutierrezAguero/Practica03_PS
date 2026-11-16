@@ -10,6 +10,7 @@ import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -45,7 +46,7 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "Pago_FK", nullable = false)
     private Pago pago;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "Reserva_FK", nullable = false)
     private List<ReservaTipoHabitacion> reservasTipo;
 

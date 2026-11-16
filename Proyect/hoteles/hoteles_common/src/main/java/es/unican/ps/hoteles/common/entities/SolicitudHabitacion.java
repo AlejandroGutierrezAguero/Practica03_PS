@@ -1,8 +1,10 @@
 package es.unican.ps.hoteles.common.entities;
 
+import java.io.Serializable;
+
 import es.unican.ps.hoteles.common.exceptions.ParametrosInvalidosException;
 
-public class SolicitudHabitacion {
+public class SolicitudHabitacion implements Serializable {
 
     private Habitacion habitacion;
     private int cantidad;

@@ -156,5 +156,4 @@ public class GestionReservasTest {
         assertThrows(DataAccessException.class, () -> sut.consultarHabitacionesHotel(0002, LocalDate.now().plusDays(1), LocalDate.now().plusDays(4)));
         verify(mockIDAOHotel).hotel(0002);
     }
-
 }
