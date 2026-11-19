@@ -170,25 +170,4 @@ public class GestionReservasIT {
         List<SolicitudHabitacion> result = sut.consultarHabitacionesHotel(hotel.getIdHotel(), LocalDate.now().plusDays(3), LocalDate.now().plusDays(13));
         assertEquals(0, result.size());
     }
-
-    /*
-    @Test
-    public void consultarHabitacionesHotelTest_1j() throws Exception {
-
-        javax.sql.DataSource ds = (javax.sql.DataSource) ec.getContext().lookup("jdbc/hoteles");
-        try (java.sql.Connection conn = ds.getConnection();
-                java.sql.Statement stmt = conn.createStatement()) {
-                    stmt.execute("RENAME TABLE HOTELES TO HOTELES_BACKUP");
-        }
-
-        try {
-            assertThrows(DataAccessException.class, () -> sut.consultarHabitacionesHotel(idHotel2, LocalDate.now().plusDays(1), LocalDate.now().plusDays(4)));
-        } finally {
-            try (java.sql.Connection conn = ds.getConnection();
-                java.sql.Statement stmt = conn.createStatement()) {
-                    stmt.execute("RENAME TABLE HOTELES_BACKUP TO HOTELES");
-            }
-        }
-    }
-    */
 }
