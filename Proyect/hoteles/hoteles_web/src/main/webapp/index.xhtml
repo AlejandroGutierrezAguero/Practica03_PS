@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html
-	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
 <h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Version Española</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Central de Reservas</title>
 </h:head>
 
 <h:body>
-	<h1>Version Española</h1>
-	<h:form>
-		<h:panelGrid columns="2">
-			<h:outputLabel value="Nombre / Título a buscar" />
-			<h:inputText value="#{busquedasBean.nombre}" />
-			<h:commandButton value="Ver datos artista" action="#{busquedasBean.doBuscaActor}" />
-			<h:commandButton value="Ver datos película" action="#{busquedasBean.doBuscaPelicula}" />
-		</h:panelGrid>
+    <h1 style="color:blue">Central de Reservas</h1>
 
-		<h:button value="Login" outcome="usuarios/usuarioRegistrado.xhtml" />
+    <h:form>
+        <h:panelGrid columns="2">
+            <h:outputLabel value="Nombre del Hotel" />
+            <h:inputText value="#{reservasBean.nombreHotel}" />
 
-	</h:form>
+            <h:outputLabel value="Localidad" />
+            <h:inputText value="#{reservasBean.localidad}" />
+        </h:panelGrid>
+
+        <h:commandButton value="Buscar" action="#{reservasBean.doBuscarHotel}" />
+        <h:button value="Gestionar Hoteles" outcome="gestionarHoteles.xhtml" />
+
+        <h:messages style="color:red" showDetail="true" showSummary="false" />
+    </h:form>
+
+    <hr/>
 </h:body>
 
 </html>
