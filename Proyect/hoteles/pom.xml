@@ -16,6 +16,7 @@
         <module>hoteles_dao</module>
         <module>hoteles_ear</module>
         <module>hoteles_integracion</module>
+        <module>hoteles_web</module>
     </modules>
 
     <properties>
