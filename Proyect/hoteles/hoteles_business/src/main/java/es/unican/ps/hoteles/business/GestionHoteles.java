@@ -1,8 +1,10 @@
 package es.unican.ps.hoteles.business;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.ps.hoteles.common.businessLayer.IBusquedaHotelesLocal;
 import es.unican.ps.hoteles.common.businessLayer.IBusquedaHotelesRemota;
@@ -31,8 +33,12 @@ public class GestionHoteles implements IBusquedaHotelesLocal, IBusquedaHotelesRe
     public List<Hotel> buscarHotelPorLocalidad(String localidad) throws DataAccessException {
         List<Hotel> hoteles = hotelDAO.hoteles();
         List<Hotel> result = new ArrayList<>();
+
+        Collator collator = Collator.getInstance(new Locale("es", "ES"));
+        collator.setStrength(Collator.PRIMARY);
+
         for (Hotel h : hoteles) {
-            if (h.getLocalidad().equals(localidad)) {
+            if (collator.equals(h.getLocalidad().trim(), localidad)) {
                 result.add(h);
             }
         }

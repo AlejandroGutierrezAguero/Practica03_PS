@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Lista de Hoteles</title>
+</h:head>
+
+<h:body>
+    <h1 style="color:blue">Lista de Hoteles</h1>
+
+    <h:form>
+        <h:panelGrid columns="3">
+            <h:outputLabel value="Fecha de Entrada" />
+            <h:inputText id="fechaEntrada" value="#{reservasBean.fechaEntrada}" 
+                         p:type="date"
+                         required="true" requiredMessage="Debes introducir una fecha de entrada.">
+                <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+            </h:inputText>
+            <h:message for="fechaEntrada" style="color:red" showDetail="true" showSummary="false" />
+
+            <h:outputLabel value="Fecha de Salida" />
+            <h:inputText id="fechaSalida" value="#{reservasBean.fechaSalida}" 
+                         p:type="date"
+                         required="true" requiredMessage="Debes introducir una fecha de salida.">
+                <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+            </h:inputText>
+            <h:message for="fechaSalida" style="color:red" showDetail="true" showSummary="false" />
+        </h:panelGrid>
+
+        <h:dataTable value="#{reservasBean.hoteles}" var="hotel"
+                     border="1" cellpadding="4" cellspacing="0">
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Hotel" />
+                </f:facet>
+                <h:outputText value="#{hotel.nombre}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Categoría" />
+                </f:facet>
+                <h:outputText value="#{hotel.categoria}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Localidad" />
+                </f:facet>
+                <h:outputText value="#{hotel.localidad}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="Dirección" />
+                </f:facet>
+                <h:outputText value="#{hotel.direccion}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText value="" />
+                </f:facet>
+                <h:commandButton value="Ver Disponibilidad" 
+                                 action="#{reservasBean.doVerDisponibilidad(hotel)}" />
+            </h:column>
+        </h:dataTable>
+
+        <h:button value="Inicio" outcome="index.xhtml" />
+
+        <h:messages globalOnly="true" style="color:red" showDetail="true" showSummary="false" />
+    </h:form>
+
+    <hr/>
+</h:body>
+
+</html>
